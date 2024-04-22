@@ -734,8 +734,13 @@ private:
 
 						state._fee = (state._price * state._assetOrder.numberOfShares * state._tradeFee / 1000000000UL) + 1;
 						state._earnedAmount += state._fee;
+
 						qpi.transfer(state._assetOrder.entity, state._price * state._assetOrder.numberOfShares - state._fee);
 						qpi.transferShareOwnershipAndPossession(input.assetName, input.issuer, state._assetOrder.entity, state._assetOrder.entity, state._assetOrder.numberOfShares, qpi.invocator());
+						if (input.price > state._price)
+						{
+							qpi.transfer(qpi.invocator(), (input.price - state._price) * state._assetOrder.numberOfShares);
+						}
 
 						state._tradeMessage.issuer = input.issuer;
 						state._tradeMessage.assetName = input.assetName;
@@ -770,6 +775,10 @@ private:
 						state._earnedAmount += state._fee;
 						qpi.transfer(state._assetOrder.entity, state._price * input.numberOfShares - state._fee);
 						qpi.transferShareOwnershipAndPossession(input.assetName, input.issuer, state._assetOrder.entity, state._assetOrder.entity, input.numberOfShares, qpi.invocator());
+						if (input.price > state._price)
+						{
+							qpi.transfer(qpi.invocator(), (input.price - state._price) * input.numberOfShares);
+						}
 
 						state._tradeMessage.issuer = input.issuer;
 						state._tradeMessage.assetName = input.assetName;
